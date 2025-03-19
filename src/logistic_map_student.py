@@ -17,8 +17,12 @@ def iterate_logistic(r, x0, n):
     返回:
         x: 迭代序列数组
     """
-    pass
-
+    x = np.zeros(n)
+    x[0] = x0
+    for i in range(1, n):
+        # 根据Logistic映射公式进行迭代
+        x[i] = r * x[i - 1] * (1 - x[i - 1])
+    return x
 def plot_time_series(r, x0, n):
     """
     绘制时间序列图
@@ -31,8 +35,13 @@ def plot_time_series(r, x0, n):
     返回:
         fig: matplotlib图像对象
     """
-    pass
-
+    x = iterate_logistic(r, x0, n)
+    fig = plt.figure()
+    plt.plot(x)
+    plt.title(f"Logistic Map Time Series (r={r})")
+    plt.xlabel("Iteration")
+    plt.ylabel("x")
+    return fig
 def plot_bifurcation(r_min, r_max, n_r, n_iterations, n_discard):
     """
     绘制分岔图
@@ -47,7 +56,17 @@ def plot_bifurcation(r_min, r_max, n_r, n_iterations, n_discard):
     返回:
         fig: matplotlib图像对象
     """
-    pass
+     r_values = np.linspace(r_min, r_max, n_r)
+    fig = plt.figure()
+    for r in r_values:
+        x = iterate_logistic(r, 0.5, n_iterations)
+        # 丢弃前n_discard个迭代点
+        x = x[n_discard:]
+        plt.plot([r] * len(x), x, ',k', alpha=0.25)
+    plt.title("Logistic Map Bifurcation Diagram")
+    plt.xlabel("r")
+    plt.ylabel("x")
+    return fig
 
 def main():
     """主函数"""
