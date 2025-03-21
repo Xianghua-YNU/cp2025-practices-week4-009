@@ -17,7 +17,7 @@ def load_data(filename):
         y: 电压数据数组
     """
     # 在此处编写代码，读取数据文件
-    data = np.loadtxt('millikan.txt')
+    data = np.loadtxt(filename)
     x = data[:, 0]  # 频率，单位Hz
     y = data[:, 1]  # 电压，单位V
     return x, y 
@@ -62,6 +62,7 @@ def plot_data_and_fit(x, y, m, c):
         fig: matplotlib图像对象
     """
     # 在此处编写代码，绘制数据点和拟合直线
+    plt.figure()
     plt.scatter(x, y, label='Experimental Data', color='blue')
     x_fit = np.linspace(x.min(), x.max(), 100)
     y_fit = m * x_fit + c
@@ -72,8 +73,7 @@ def plot_data_and_fit(x, y, m, c):
     plt.title('Millikan Photoelectric Effect Data')
     plt.legend()
     plt.grid(True)
-    fig = plt.gcf()
-    return fig
+    return plt.gcf()
 
 def calculate_planck_constant(m):
     """
