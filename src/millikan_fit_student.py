@@ -20,7 +20,8 @@ def load_data(filename):
     data = np.loadtxt('millikan.txt')
     x = data[:, 0]  # 频率，单位Hz
     y = data[:, 1]  # 电压，单位V
-
+    return x, y 
+    
 def calculate_parameters(x, y):
     """
     计算最小二乘拟合参数
