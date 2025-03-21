@@ -142,7 +142,6 @@ def main():
     # 保存图像
     fig.savefig("millikan_fit.png", dpi=300)
     plt.show()
-except Exception as e:
-    print(f"程序出错: {str(e)}")
+
 if __name__ == "__main__":
     main()
