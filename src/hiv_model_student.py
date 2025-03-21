@@ -1,23 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-time = np.linspace(0, 1, 11)
-
-A = 100          # 一个初始病毒载量，例如100 (任意单位)
-alpha = 2.0      # 假设 α = 2.0/day
-B = 0            # 暂时设为零
-beta = 5.0       # 具有更大衰减速率，暂时不起作用，因为B=0
-
-viral_load = A * np.exp(-alpha * time) + B * np.exp(-beta * time)
-
-plt.plot(time, viral_load, label='Initial Model (B=0)')
-plt.xlabel('Time (days)')
-plt.ylabel('HIV Viral Load (arbitrary units)')
-plt.title('HIV Viral load vs. Time (Initial Exploration)')
-plt.legend()
-plt.grid(True)
-plt.show()
-
 def load_hiv_data(filepath):
     data = np.loadtxt(filepath, delimiter=",")
     time_data = data[:, 0]  # 第一列是时间
@@ -52,6 +35,23 @@ def load_hiv_data(filepath):
 
 def main():
     # TODO: 主函数，用于测试模型
+    time = np.linspace(0, 1, 11)
+
+    A = 100          # 一个初始病毒载量，例如100 (任意单位)
+    alpha = 2.0      # 假设 α = 2.0/day
+    B = 0            # 暂时设为零
+    beta = 5.0       # 具有更大衰减速率，暂时不起作用，因为B=0
+
+    viral_load = A * np.exp(-alpha * time) + B * np.exp(-beta * time)
+
+    plt.plot(time, viral_load, label='Initial Model (B=0)')
+    plt.xlabel('Time (days)')
+    plt.ylabel('HIV Viral Load (arbitrary units)')
+    plt.title('HIV Viral load vs. Time (Initial Exploration)')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+    
     time_data, viral_data = load_hiv_data('HIVseries.csv')
 
     plt.plot(time_data, viral_data, 'ro', label='Experimental Data') # 'ro' 为红色圆点
