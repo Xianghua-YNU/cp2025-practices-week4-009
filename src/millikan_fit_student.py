@@ -17,10 +17,11 @@ def load_data(filename):
         y: 电压数据数组
     """
     # 在此处编写代码，读取数据文件
-    data = np.loadtxt(filename)
-    x = data[:, 0]  # 频率，单位Hz
-    y = data[:, 1]  # 电压，单位V
-    return x, y 
+    try:
+        data = np.loadtxt(filename)
+        return data[:, 0], data[:, 1]
+    except Exception as e:
+        raise FileNotFoundError(f"无法加载文件: {filename}") from e 
     
 def calculate_parameters(x, y):
     """
@@ -39,13 +40,24 @@ def calculate_parameters(x, y):
         Exy: xy的平均值
     """
     # 在此处编写代码，计算Ex, Ey, Exx, Exy, m和c
+    if len(x) == 0 or len(y) == 0:
+        raise ValueError("输入数据不能为空")
+    if len(x) != len(y):
+        raise ValueError("x和y数组长度必须相同")
+    
+    N = len(x)
     Ex = np.mean(x)
     Ey = np.mean(y)
     Exx = np.mean(x**2)
-    Exy = np.mean(x * y)
+    Exy = np.mean(x*y)
+    
     denominator = Exx - Ex**2
-    m = (Exy - Ex * Ey) / denominator
-    c = (Exx * Ey - Ex * Exy) / denominator
+    if denominator == 0:
+        raise ValueError("无法计算参数，分母为零")
+    
+    m = (Exy - Ex*Ey) / denominator
+    c = (Exx*Ey - Ex*Exy) / denominator
+    
     return m, c, Ex, Ey, Exx, Exy
     
 def plot_data_and_fit(x, y, m, c):
@@ -62,18 +74,17 @@ def plot_data_and_fit(x, y, m, c):
         fig: matplotlib图像对象
     """
     # 在此处编写代码，绘制数据点和拟合直线
-    plt.figure()
-    plt.scatter(x, y, label='Experimental Data', color='blue')
-    x_fit = np.linspace(x.min(), x.max(), 100)
-    y_fit = m * x_fit + c
-    plt.plot(x_fit, y_fit, label='Linear Fit', color='red')
-
-    plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Voltage (V)')
-    plt.title('Millikan Photoelectric Effect Data')
-    plt.legend()
-    plt.grid(True)
-    return plt.gcf()
+    if np.isnan(m) or np.isnan(c):
+        raise ValueError("斜率和截距不能为NaN")
+    
+    fig, ax = plt.subplots()
+    ax.scatter(x, y, label='实验数据')
+    y_fit = m*x + c
+    ax.plot(x, y_fit, 'r', label='拟合直线')
+    ax.set_xlabel('频率 (Hz)')
+    ax.set_ylabel('电压 (V)')
+    ax.legend()
+    return fig
 
 def calculate_planck_constant(m):
     """
@@ -91,11 +102,15 @@ def calculate_planck_constant(m):
     
     # 在此处编写代码，计算普朗克常量和相对误差
     # 提示: 实际的普朗克常量值为 6.626e-34 J·s
-    e = 1.602e-19  # 电子电荷，单位C
-    h = m * e      # 根据斜率计算h
-    h_actual = 6.62607015e-34  # 普朗克常量的实际值，单位J·s
-    relative_error = abs((h - h_actual) / h_actual) * 100
+    if m <= 0:
+        raise ValueError("斜率必须为正数")
+    
+    e = 1.602e-19  # 电子电荷
+    h = m * e
+    actual_h = 6.626e-34
+    relative_error = abs(h - actual_h) / actual_h * 100
     return h, relative_error
+
 
 def main():
     """主函数"""
@@ -127,6 +142,7 @@ def main():
     # 保存图像
     fig.savefig("millikan_fit.png", dpi=300)
     plt.show()
-
+except Exception as e:
+    print(f"程序出错: {str(e)}")
 if __name__ == "__main__":
     main()
