@@ -45,7 +45,8 @@ def calculate_parameters(x, y):
     denominator = Exx - Ex**2
     m = (Exy - Ex * Ey) / denominator
     c = (Exx * Ey - Ex * Exy) / denominator
-
+    return m, c, Ex, Ey, Exx, Exy
+    
 def plot_data_and_fit(x, y, m, c):
     """
     绘制数据点和拟合直线
@@ -70,8 +71,8 @@ def plot_data_and_fit(x, y, m, c):
     plt.title('Millikan Photoelectric Effect Data')
     plt.legend()
     plt.grid(True)
-    plt.savefig('millikan_fit.png')
-    plt.close()
+    fig = plt.gcf()
+    return fig
 
 def calculate_planck_constant(m):
     """
@@ -92,7 +93,8 @@ def calculate_planck_constant(m):
     e = 1.602e-19  # 电子电荷，单位C
     h = m * e      # 根据斜率计算h
     h_actual = 6.62607015e-34  # 普朗克常量的实际值，单位J·s
-
+    relative_error = abs((h - h_actual) / h_actual) * 100
+    return h, relative_error
 
 def main():
     """主函数"""
