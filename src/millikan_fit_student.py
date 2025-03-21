@@ -17,7 +17,9 @@ def load_data(filename):
         y: 电压数据数组
     """
     # 在此处编写代码，读取数据文件
-    pass
+    data = np.loadtxt('millikan.txt')
+x = data[:, 0]  # 频率，单位Hz
+y = data[:, 1]  # 电压，单位V
 
 def calculate_parameters(x, y):
     """
@@ -36,7 +38,13 @@ def calculate_parameters(x, y):
         Exy: xy的平均值
     """
     # 在此处编写代码，计算Ex, Ey, Exx, Exy, m和c
-    pass
+    Ex = np.mean(x)
+Ey = np.mean(y)
+Exx = np.mean(x**2)
+Exy = np.mean(x * y)
+denominator = Exx - Ex**2
+m = (Exy - Ex * Ey) / denominator
+c = (Exx * Ey - Ex * Exy) / denominator
 
 def plot_data_and_fit(x, y, m, c):
     """
@@ -52,7 +60,18 @@ def plot_data_and_fit(x, y, m, c):
         fig: matplotlib图像对象
     """
     # 在此处编写代码，绘制数据点和拟合直线
-    pass
+    plt.scatter(x, y, label='Experimental Data', color='blue')
+x_fit = np.linspace(x.min(), x.max(), 100)
+y_fit = m * x_fit + c
+plt.plot(x_fit, y_fit, label='Linear Fit', color='red')
+
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Voltage (V)')
+plt.title('Millikan Photoelectric Effect Data')
+plt.legend()
+plt.grid(True)
+plt.savefig('millikan_fit.png')
+plt.close()
 
 def calculate_planck_constant(m):
     """
@@ -70,7 +89,10 @@ def calculate_planck_constant(m):
     
     # 在此处编写代码，计算普朗克常量和相对误差
     # 提示: 实际的普朗克常量值为 6.626e-34 J·s
-    pass
+    e = 1.602e-19  # 电子电荷，单位C
+h = m * e      # 根据斜率计算h
+h_actual = 6.62607015e-34  # 普朗克常量的实际值，单位J·s
+
 
 def main():
     """主函数"""
