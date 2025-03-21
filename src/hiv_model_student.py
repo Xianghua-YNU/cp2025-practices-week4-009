@@ -1,6 +1,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+time = np.linspace(0, 1, 11)
+
+A = 100          # 一个初始病毒载量，例如100 (任意单位)
+alpha = 2.0      # 假设 α = 2.0/day
+B = 0            # 暂时设为零
+beta = 5.0       # 具有更大衰减速率，暂时不起作用，因为B=0
+
+viral_load = A * np.exp(-alpha * time) + B * np.exp(-beta * time)
+
+plt.plot(time, viral_load, label='Initial Model (B=0)')
+plt.xlabel('Time (days)')
+plt.ylabel('HIV Viral Load (arbitrary units)')
+plt.title('HIV Viral load vs. Time (Initial Exploration)')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+def load_hiv_data(filepath):
+    data = np.loadtxt(filepath, delimiter=",")
+    time_data = data[:, 0]  # 第一列是时间
+    viral_data = data[:, 1]  # 第二列是病毒载量数据
+    return time_data, viral_data
+
 class HIVModel:
     def __init__(self, A, alpha, B, beta):
         # TODO: 初始化模型参数
@@ -8,16 +31,15 @@ class HIVModel:
         self.alpha = alpha
         self.B = B
         self.beta = beta
-        pass
 
     def viral_load(self, time):
         # TODO: 计算病毒载量
         return self.A * np.exp(-self.alpha * time) + self.B * np.exp(-self.beta * time)
 
-    def plot_model(self, time):
+    def plot_model(self, time，label="Model"):
         # TODO: 绘制模型曲线
-         viral_load_values = self.viral_load(time)
-        plt.plot(time, viral_load_values, label='Model Fit', color='blue')
+        vl = self.viral_load(time)
+        plt.plot(time, vl, '-', label=label)
 
 def load_hiv_data(filepath):
     # TODO: 加载HIV数据
@@ -30,14 +52,15 @@ def load_hiv_data(filepath):
 
 def main():
     # TODO: 主函数，用于测试模型
-    filepath = 'HIVseries.csv'  # 确保文件路径正确
-    days, concentration = load_hiv_data(filepath)
+    time_data, viral_data = load_hiv_data('HIVseries.csv')
 
-    # 检查数据是否成功加载
-    if days.size == 0 or concentration.size == 0:
-        print("No data loaded. Please check the file path and format.")
-        return
-
+    plt.plot(time_data, viral_data, 'ro', label='Experimental Data') # 'ro' 为红色圆点
+    plt.xlabel('Time (days)')
+    plt.ylabel('HIV Viral Load (arbitrary units)')
+    plt.title('HIV Viral Load Data')
+    plt.grid(True)
+    plt.legend()
+    plt.show()
 
 if __name__ == "__main__":
     main()
