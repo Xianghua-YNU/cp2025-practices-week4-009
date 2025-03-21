@@ -70,8 +70,8 @@ plt.show()
 import numpy as np
 import matplotlib.pyplot as plt
 
-data_A = data('data/g149novickA.txt', delimiter=',')# 加载数据
-data_B = data('data/g149novickB.txt', delimiter=',')
+data_A = np.loadtxt('data/g149novickA.txt', delimiter=',')# 加载数据
+data_B = np.loadtxt('data/g149novickB.txt', delimiter=',')
 
 time_A, value_A = data_A[:, 0], data_A[:, 1]# 提取时间和数据
 time_B, value_B = data_B[:, 0], data_B[:, 1]
